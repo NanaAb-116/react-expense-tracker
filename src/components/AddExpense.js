@@ -17,6 +17,7 @@ function AddExpense() {
   const [time, setTime] = useState(new Date().toLocaleTimeString());
   const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState("");
+  const [msg, setMsg] = useState("");
 
   useEffect(() => {
     setInterval(() => {
@@ -26,11 +27,25 @@ function AddExpense() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(
-      AddNewExpense({ id: uuidv4(), title, date, time, amount, category })
-    );
-    setTitle("");
-    setAmount("");
+    if (!title || !amount || !category) {
+      setMsg("All fields are Required!");
+      setTimeout(() => {
+        setMsg("");
+      }, 2000);
+    } else {
+      dispatch(
+        AddNewExpense({ id: uuidv4(), title, date, time, amount, category })
+      );
+      setMsg("Expense Added Successfully!");
+      setAmount(0);
+      setTitle("");
+      setCategory("");
+      setTimeout(() => {
+        setMsg("");
+      }, 2000);
+      setTitle("");
+      setAmount("");
+    }
   };
   return (
     <>
@@ -46,7 +61,6 @@ function AddExpense() {
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          required
         />
         <label htmlFor="date">Date</label>
         <input
@@ -91,6 +105,7 @@ function AddExpense() {
         >
           Save
         </button>
+        <h3>{msg}</h3>
       </form>
     </>
   );
